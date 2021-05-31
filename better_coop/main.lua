@@ -71,6 +71,8 @@ local function onPreGetCollectible(_)
   if Game():GetLevel():GetStage() == LevelStage.STAGE1_1 and
      Game():GetLevel():GetCurrentRoomIndex() ~= starting_room_idx then
     return nil
+  elseif Game():GetLevel():GetStage() ~= LevelStage.STAGE1_1 then
+    return nil
   end
 
   -- Force rerolls in first starting room to always be colors
