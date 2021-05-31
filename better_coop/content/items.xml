@@ -1,0 +1,6 @@
+<items gfxroot="gfx/items/" version="1">
+    <passive id="1" name="Blue" description="Da ba dee da ba daa" gfx="player_blue.png" />
+    <passive id="2" name="Green" description="Glow green!" gfx="player_green.png" />
+    <passive id="3" name="Red" description="Glow red!" gfx="player_red.png" />
+    <passive id="4" name="Purple" description="Glow purple!" gfx="player_purple.png" />
+</items>

@@ -1,0 +1,6 @@
+<costumes anm2root="gfx/">
+    <costume id="1" anm2path="characters/player_blue.anm2" type="passive" />
+    <costume id="2" anm2path="characters/player_green.anm2" type="passive" />
+    <costume id="3" anm2path="characters/player_red.anm2" type="passive" />
+    <costume id="4" anm2path="characters/player_purple.anm2" type="passive" />
+</costumes>
