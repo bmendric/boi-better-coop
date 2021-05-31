@@ -3,4 +3,7 @@
     <costume id="2" anm2path="characters/player_green.anm2" type="passive" />
     <costume id="3" anm2path="characters/player_red.anm2" type="passive" />
     <costume id="4" anm2path="characters/player_purple.anm2" type="passive" />
+    <costume id="5" anm2path="characters/player_yellow.anm2" type="passive" />
+    <costume id="6" anm2path="characters/player_white.anm2" type="passive" />
+    <costume id="7" anm2path="characters/player_gray.anm2" type="passive" />
 </costumes>

@@ -3,4 +3,7 @@
     <passive id="2" name="Green" description="Glow green!" gfx="player_green.png" />
     <passive id="3" name="Red" description="Glow red!" gfx="player_red.png" />
     <passive id="4" name="Purple" description="Glow purple!" gfx="player_purple.png" />
+    <passive id="5" name="Yellow" description="Glow yellow!" gfx="player_yellow.png" />
+    <passive id="6" name="White" description="Glow white!" gfx="player_white.png" />
+    <passive id="7" name="Gray" description="Glow grap!" gfx="player_gray.png" />
 </items>

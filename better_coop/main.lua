@@ -6,11 +6,17 @@ local MIN_Y = 160
 local MAX_X = 555
 local MAX_Y = 400
 
+-- Cross-callback state
+local starting_room_idx = 0
+
 local function onNewLevel(_)
   -- Only spawn on the first starting room
   if Game():GetLevel():GetStage() ~= LevelStage.STAGE1_1 then
-    return
+    return nil
   end
+
+  -- Save idx of starting room for manually overwriting item pool here
+  starting_room_idx = Game():GetLevel():GetCurrentRoomIndex()
 
   local blue_id = Isaac.GetItemIdByName("Blue")
   local green_id = Isaac.GetItemIdByName("Green")
@@ -60,4 +66,18 @@ local function onNewLevel(_)
 
 end
 
+local function onPreGetCollectible(_)
+  -- If we aren't in the first floor starting room, short circuit
+  if Game():GetLevel():GetStage() == LevelStage.STAGE1_1 and
+     Game():GetLevel():GetCurrentRoomIndex() ~= starting_room_idx then
+    return nil
+  end
+
+  -- Force rerolls in first starting room to always be colors
+  item_names = {"Blue", "Green", "Red", "Purple", "Yellow", "White", "Gray"}
+  return Isaac.GetItemIdByName(item_names[math.random(#item_names)])
+end
+
+
 bettercoop:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, onNewLevel)
+bettercoop:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE, onPreGetCollectible)
