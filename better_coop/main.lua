@@ -1,4 +1,4 @@
-local bettercoop = RegisterMod("BetterCoop", 1);
+local betterCoop = RegisterMod("BetterCoop", 1);
 
 -- (0,0 in top left of screen)
 local MIN_X = 75
@@ -9,7 +9,37 @@ local MAX_Y = 400
 -- Cross-callback state
 local starting_room_idx = 0
 
-local function onNewLevel(_)
+-- Debug stuff
+local isDebugging = false
+
+function betterCoop:checkDebug(_betterCoop)
+  if Game():GetLevel():GetStage() == LevelStage.STAGE1_1 and isDebugging then
+    -- Spawn Magic Mush
+    Isaac.Spawn(
+      EntityType.ENTITY_PICKUP,
+      PickupVariant.PICKUP_COLLECTIBLE,
+      12,
+      Vector(310,300),
+      Vector(0,0),
+      nil
+    )
+
+    -- Spawn Toxic Shock
+    Isaac.Spawn(
+      EntityType.ENTITY_PICKUP,
+      PickupVariant.PICKUP_COLLECTIBLE,
+      350,
+      Vector(330,300),
+      Vector(0,0),
+      nil
+    )
+  end
+end
+
+betterCoop:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, betterCoop:checkDebug)
+
+-- First room color spawning
+function betterCoop:onNewLevel(_betterCoop)
   -- Only spawn on the first starting room
   if Game():GetLevel():GetStage() ~= LevelStage.STAGE1_1 then
     return nil
@@ -66,7 +96,7 @@ local function onNewLevel(_)
 
 end
 
-local function onPreGetCollectible(_)
+function betterCoop:onPreGetCollectible(_betterCoop)
   -- If we aren't in the first floor starting room, short circuit
   if Game():GetLevel():GetStage() == LevelStage.STAGE1_1 and
      Game():GetLevel():GetCurrentRoomIndex() ~= starting_room_idx then
@@ -80,6 +110,5 @@ local function onPreGetCollectible(_)
   return Isaac.GetItemIdByName(item_names[math.random(#item_names)])
 end
 
-
-bettercoop:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, onNewLevel)
-bettercoop:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE, onPreGetCollectible)
+betterCoop:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, betterCoop:onNewLevel)
+betterCoop:AddCallback(ModCallbacks.MC_PRE_GET_COLLECTIBLE, betterCoop:onPreGetCollectible)
