@@ -10,29 +10,32 @@ local MAX_Y = 400
 local starting_room_idx = 0
 
 -- Debug stuff
-local isDebugging = false
+local isDebugging = true
 
 function betterCoop:checkDebug(_betterCoop)
   if Game():GetLevel():GetStage() == LevelStage.STAGE1_1 and isDebugging then
-    -- Spawn Magic Mush
     Isaac.Spawn(
       EntityType.ENTITY_PICKUP,
       PickupVariant.PICKUP_COLLECTIBLE,
-      12,
+      CollectibleType.COLLECTIBLE_MAGIC_MUSHROOM,
       Vector(310,300),
       Vector(0,0),
       nil
     )
 
-    -- Spawn Toxic Shock
     Isaac.Spawn(
       EntityType.ENTITY_PICKUP,
       PickupVariant.PICKUP_COLLECTIBLE,
-      350,
+      CollectibleType.COLLECTIBLE_TOXIC_SHOCK,
       Vector(330,300),
       Vector(0,0),
       nil
     )
+
+    Game():GetPlayer():AddCoins(99)
+    Game():GetPlayer():AddMaxHearts(12)
+    Game():GetPlayer():AddHearts(12)
+    Game():GetPlayer():AddCard(Card.CARD_JUDGEMENT)
   end
 end
 
