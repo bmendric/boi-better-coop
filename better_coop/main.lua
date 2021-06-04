@@ -32,10 +32,10 @@ function betterCoop.checkDebug(_betterCoop)
       nil
     )
 
-    Game():GetPlayer():AddCoins(99)
-    Game():GetPlayer():AddMaxHearts(12)
-    Game():GetPlayer():AddHearts(12)
-    Game():GetPlayer():AddCard(Card.CARD_JUDGEMENT)
+    Game():GetPlayer(0):AddCoins(99)
+    Game():GetPlayer(0):AddMaxHearts(12)
+    Game():GetPlayer(0):AddHearts(12)
+    Game():GetPlayer(0):AddCard(Card.CARD_JUDGEMENT)
   end
 end
 
@@ -124,31 +124,43 @@ betterCoop:AddCallback(ModCallbacks.MC_POST_UPDATE, function(_betterCoop)
   if room:GetType() == RoomType.ROOM_TREASURE or room:GetType() == RoomType.ROOM_BOSS then
     for _, entity in pairs(Isaac.GetRoomEntities()) do
       -- Looking for non-empty collectible pedestals
-      if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and entity.SubType != CollectibleType.COLLECTIBLE_NULL then
-        local item = ItemConfig():GetCollectible(entity.SubType)
+      if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_COLLECTIBLE and entity.SubType ~= CollectibleType.COLLECTIBLE_NULL then
+        local item = Isaac.GetItemConfig():GetCollectible(entity.SubType)
 
         if item.Type == ItemType.ITEM_ACTIVE and entity:ToPickup().Touched and not handledActiveItems[item.ID] then
+          -- Figure out where to spawn the item
+          local curPos = entity.Position
+          offset = Vector(0,0)
+          if curPos.Y + 20 < MAX_Y then
+            offset = Vector(0, 20)
+          elseif curPos.X + 20 < MAX_X then
+            offset = Vector(20, 0)
+          else
+            -- Safe to default to moving up
+            offset = Vector(0, -20)
+          end
+
           -- Spawn an empty pedestal
           Isaac.Spawn(
             EntityType.ENTITY_PICKUP,
             PickupVariant.PICKUP_COLLECTIBLE,
             CollectibleType.COLLECTIBLE_NULL,
-            entity.Position
+            entity.Position + offset,
             Vector(0,0),
             nil
           )
 
-          -- Make sure we don't spawn more pedestals than needed
           handledActiveItems[item.ID] = true
-          for i = 0, Game():GetNumPlayers() do
+          -- Make sure currently held items are tracked
+          for i = 0, Game():GetNumPlayers() - 1 do
             playerPrimaryActive = Isaac.GetPlayer(i):GetActiveItem()
             playerSecondaryActive = Isaac.GetPlayer(i):GetActiveItem(ActiveSlot.SLOT_SECONDARY)
 
-            if playerPrimaryActive then
+            if playerPrimaryActive > 0 then
               handledActiveItems[playerPrimaryActive] = true
             end
 
-            if playerSecondaryActive then
+            if playerSecondaryActive > 0 then
               handledActiveItems[playerSecondaryActive] = true
             end
           end
